@@ -69,6 +69,10 @@ func main() {
 var tmpl = `
 package {{.Package}}
 
+import (
+	"encoding/json"
+)
+
 // {{.Name}}Optional contains a initialized or empty copy of the {{.Type}} type.
 type {{.Name}}Optional struct {
 	v *{{.Type}}
@@ -122,6 +126,12 @@ func (t {{.Name}}Optional) IsDefined() bool {
 //Get returns the contained {{.Type}} value.
 //NOTE: If the value is empty, this will return the {{.Type}} zero value.
 func (t {{.Name}}Optional) Get() {{.Type}} {
+	var v {{.Type}}
+
+	if t.IsEmpty() {
+		return v
+	}
+	
 	return *t.v
 }
 
@@ -146,6 +156,10 @@ func (t {{.Name}}Optional) MarshalJSON() ([]byte, error) {
 //UnmarshalJSON marshals the contained {{.Type}} value into JSON representation.
 func (t *{{.Name}}Optional) UnmarshalJSON(data []byte) error {
 	if data == nil {
+		return nil
+	}
+
+	if string(data) == "null" {
 		return nil
 	}
 
