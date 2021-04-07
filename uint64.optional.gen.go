@@ -2,6 +2,7 @@ package optional
 
 import (
 	"encoding/json"
+	"fmt"
 )
 
 // Uint64Optional contains a initialized or empty copy of the uint64 type.
@@ -125,4 +126,8 @@ func (t *Uint64Optional) UnmarshalYAML(unmarshal func(interface{}) error) error 
 	t.v = &v
 
 	return nil
+}
+
+func (t *Uint64Optional) String() string {
+	return fmt.Sprintf("%v", t.Get())
 }

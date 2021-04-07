@@ -2,6 +2,7 @@ package optional
 
 import (
 	"encoding/json"
+	"fmt"
 )
 
 // Int8Optional contains a initialized or empty copy of the int8 type.
@@ -125,4 +126,8 @@ func (t *Int8Optional) UnmarshalYAML(unmarshal func(interface{}) error) error {
 	t.v = &v
 
 	return nil
+}
+
+func (t *Int8Optional) String() string {
+	return fmt.Sprintf("%v", t.Get())
 }

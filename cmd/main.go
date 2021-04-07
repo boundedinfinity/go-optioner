@@ -70,6 +70,7 @@ var tmpl = `
 package {{.Package}}
 
 import (
+	"fmt"
 	"encoding/json"
 )
 
@@ -195,5 +196,9 @@ func (t *{{.Name}}Optional) UnmarshalYAML(unmarshal func(interface{}) error) err
 	t.v = &v
 
 	return nil
+}
+
+func (t *{{.Name}}Optional) String() string {
+	return fmt.Sprintf("%v", t.Get())
 }
 `

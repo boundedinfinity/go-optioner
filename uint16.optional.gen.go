@@ -2,6 +2,7 @@ package optional
 
 import (
 	"encoding/json"
+	"fmt"
 )
 
 // Uint16Optional contains a initialized or empty copy of the uint16 type.
@@ -125,4 +126,8 @@ func (t *Uint16Optional) UnmarshalYAML(unmarshal func(interface{}) error) error 
 	t.v = &v
 
 	return nil
+}
+
+func (t *Uint16Optional) String() string {
+	return fmt.Sprintf("%v", t.Get())
 }

@@ -2,6 +2,7 @@ package optional
 
 import (
 	"encoding/json"
+	"fmt"
 )
 
 // IntOptional contains a initialized or empty copy of the int type.
@@ -125,4 +126,8 @@ func (t *IntOptional) UnmarshalYAML(unmarshal func(interface{}) error) error {
 	t.v = &v
 
 	return nil
+}
+
+func (t *IntOptional) String() string {
+	return fmt.Sprintf("%v", t.Get())
 }

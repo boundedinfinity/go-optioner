@@ -2,6 +2,7 @@ package optional
 
 import (
 	"encoding/json"
+	"fmt"
 )
 
 // BoolOptional contains a initialized or empty copy of the bool type.
@@ -125,4 +126,8 @@ func (t *BoolOptional) UnmarshalYAML(unmarshal func(interface{}) error) error {
 	t.v = &v
 
 	return nil
+}
+
+func (t *BoolOptional) String() string {
+	return fmt.Sprintf("%v", t.Get())
 }

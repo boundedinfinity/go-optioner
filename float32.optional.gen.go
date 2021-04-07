@@ -2,6 +2,7 @@ package optional
 
 import (
 	"encoding/json"
+	"fmt"
 )
 
 // Float32Optional contains a initialized or empty copy of the float32 type.
@@ -125,4 +126,8 @@ func (t *Float32Optional) UnmarshalYAML(unmarshal func(interface{}) error) error
 	t.v = &v
 
 	return nil
+}
+
+func (t *Float32Optional) String() string {
+	return fmt.Sprintf("%v", t.Get())
 }
