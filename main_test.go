@@ -9,6 +9,7 @@ import (
 	"github.com/boundedinfinity/optional"
 	. "github.com/onsi/ginkgo"
 	. "github.com/onsi/gomega"
+	"gopkg.in/yaml.v2"
 )
 
 func TestOptionals(t *testing.T) {
@@ -17,7 +18,7 @@ func TestOptionals(t *testing.T) {
 }
 
 type StrStruct struct {
-	V optional.StringOptional
+	V optional.StringOptional `yaml:"V"`
 }
 
 var _ = Describe("StringOptional", func() {
@@ -36,6 +37,14 @@ var _ = Describe("StringOptional", func() {
 			Expect(err).To(BeNil())
 			Expect(bs).NotTo(BeNil())
 			Expect(string(bs)).To(Equal("null"))
+		})
+
+		It("marshal to YAML value of null", func() {
+			bs, err := yaml.Marshal(actual)
+			Expect(err).To(BeNil())
+			str := string(bs)
+			Expect(bs).NotTo(BeNil())
+			Expect(str).To(Equal("null\n"))
 		})
 
 		It("unmarshal from JSON value of null", func() {
@@ -80,22 +89,41 @@ var _ = Describe("StringOptional", func() {
 		It(fmt.Sprintf("marshal to JSON value of '%v'", input), func() {
 			bs, err := json.Marshal(actual)
 			Expect(err).To(BeNil())
+			str := string(bs)
 			Expect(bs).NotTo(BeNil())
-			Expect(string(bs)).To(Equal(`"` + input + `"`))
+			Expect(str).To(Equal(`"` + input + `"`))
 		})
 
 		It(fmt.Sprintf("unmarshal from JSON value of '%v'", input), func() {
 			var actual optional.StringOptional
-			bs := []byte(`"` + input + `"`)
-			err := json.Unmarshal(bs, &actual)
+			bs := `"` + input + `"`
+			err := json.Unmarshal([]byte(bs), &actual)
 			Expect(err).To(BeNil())
 			Expect(actual.IsDefined()).To(BeTrue())
 		})
 
 		It(fmt.Sprintf("unmarshal from JSON embedded value of '%v'", input), func() {
 			var actual StrStruct
-			bs1 := []byte(fmt.Sprintf(`{"V": "%v"}`, input))
-			err := json.Unmarshal(bs1, &actual)
+			bs1 := fmt.Sprintf(`{"V": "%v"}`, input)
+			err := json.Unmarshal([]byte(bs1), &actual)
+			Expect(err).To(BeNil())
+			Expect(actual.V.IsEmpty()).To(BeFalse())
+			Expect(actual.V.IsDefined()).To(BeTrue())
+			Expect(actual.V.Get()).To(Equal(input))
+		})
+
+		It(fmt.Sprintf("marshal to YAML value of '%v'", input), func() {
+			bs, err := yaml.Marshal(actual)
+			Expect(err).To(BeNil())
+			str := string(bs)
+			Expect(bs).NotTo(BeNil())
+			Expect(str).To(Equal(input + "\n"))
+		})
+
+		It(fmt.Sprintf("unmarshal from YAML embedded value of '%v'", input), func() {
+			var actual StrStruct
+			bs1 := fmt.Sprintf(`V: %v`, input)
+			err := yaml.Unmarshal([]byte(bs1), &actual)
 			Expect(err).To(BeNil())
 			Expect(actual.V.IsEmpty()).To(BeFalse())
 			Expect(actual.V.IsDefined()).To(BeTrue())

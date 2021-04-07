@@ -75,7 +75,7 @@ func (t Float32Optional) GetOrElse(v float32) float32 {
 	return v
 }
 
-//MarshalJSON marshals the contained float32 value into JSON representation.
+//MarshalJSON marshals the Float32Optional type into the JSON representation.
 func (t Float32Optional) MarshalJSON() ([]byte, error) {
 	if t.IsDefined() {
 		return json.Marshal(*t.v)
@@ -84,7 +84,7 @@ func (t Float32Optional) MarshalJSON() ([]byte, error) {
 	return json.Marshal(nil)
 }
 
-//UnmarshalJSON marshals the contained float32 value into JSON representation.
+//UnmarshalJSON unmarshals the JSON representation to the Float32Optional type.
 func (t *Float32Optional) UnmarshalJSON(data []byte) error {
 	if data == nil {
 		return nil
@@ -97,6 +97,28 @@ func (t *Float32Optional) UnmarshalJSON(data []byte) error {
 	var v float32
 
 	if err := json.Unmarshal(data, &v); err != nil {
+		return err
+	}
+
+	t.v = &v
+
+	return nil
+}
+
+//MarshalYAML marshals the Float32Optional type into the YAML representation.
+func (t Float32Optional) MarshalYAML() (interface{}, error) {
+	if t.IsDefined() {
+		return *t.v, nil
+	}
+
+	return nil, nil
+}
+
+//UnmarshalYAML unmarshals the YAML representation to the Float32Optional type.
+func (t *Float32Optional) UnmarshalYAML(unmarshal func(interface{}) error) error {
+	var v float32
+
+	if err := unmarshal(&v); err != nil {
 		return err
 	}
 

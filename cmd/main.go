@@ -144,7 +144,7 @@ func (t {{.Name}}Optional) GetOrElse(v {{.Type}}) {{.Type}} {
 	return v
 }
 
-//MarshalJSON marshals the contained {{.Type}} value into JSON representation.
+//MarshalJSON marshals the {{.Name}}Optional type into the JSON representation.
 func (t {{.Name}}Optional) MarshalJSON() ([]byte, error) {
 	if t.IsDefined() {
 		return json.Marshal(*t.v)
@@ -153,7 +153,7 @@ func (t {{.Name}}Optional) MarshalJSON() ([]byte, error) {
 	return json.Marshal(nil)
 }
 
-//UnmarshalJSON marshals the contained {{.Type}} value into JSON representation.
+//UnmarshalJSON unmarshals the JSON representation to the {{.Name}}Optional type.
 func (t *{{.Name}}Optional) UnmarshalJSON(data []byte) error {
 	if data == nil {
 		return nil
@@ -166,6 +166,29 @@ func (t *{{.Name}}Optional) UnmarshalJSON(data []byte) error {
 	var v {{.Type}}
 
 	if err := json.Unmarshal(data, &v); err != nil {
+		return err
+	}
+
+	t.v = &v
+
+	return nil
+}
+
+//MarshalYAML marshals the {{.Name}}Optional type into the YAML representation.
+func (t {{.Name}}Optional) MarshalYAML() (interface{}, error) {
+	if t.IsDefined() {
+		return *t.v, nil
+	}
+
+	return nil, nil
+}
+
+
+//UnmarshalYAML unmarshals the YAML representation to the {{.Name}}Optional type.
+func (t *{{.Name}}Optional) UnmarshalYAML(unmarshal func(interface{}) error) error {
+	var v {{.Type}}
+
+	if err := unmarshal(&v); err != nil {
 		return err
 	}
 

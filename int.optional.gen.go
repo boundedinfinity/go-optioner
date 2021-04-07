@@ -75,7 +75,7 @@ func (t IntOptional) GetOrElse(v int) int {
 	return v
 }
 
-//MarshalJSON marshals the contained int value into JSON representation.
+//MarshalJSON marshals the IntOptional type into the JSON representation.
 func (t IntOptional) MarshalJSON() ([]byte, error) {
 	if t.IsDefined() {
 		return json.Marshal(*t.v)
@@ -84,7 +84,7 @@ func (t IntOptional) MarshalJSON() ([]byte, error) {
 	return json.Marshal(nil)
 }
 
-//UnmarshalJSON marshals the contained int value into JSON representation.
+//UnmarshalJSON unmarshals the JSON representation to the IntOptional type.
 func (t *IntOptional) UnmarshalJSON(data []byte) error {
 	if data == nil {
 		return nil
@@ -97,6 +97,28 @@ func (t *IntOptional) UnmarshalJSON(data []byte) error {
 	var v int
 
 	if err := json.Unmarshal(data, &v); err != nil {
+		return err
+	}
+
+	t.v = &v
+
+	return nil
+}
+
+//MarshalYAML marshals the IntOptional type into the YAML representation.
+func (t IntOptional) MarshalYAML() (interface{}, error) {
+	if t.IsDefined() {
+		return *t.v, nil
+	}
+
+	return nil, nil
+}
+
+//UnmarshalYAML unmarshals the YAML representation to the IntOptional type.
+func (t *IntOptional) UnmarshalYAML(unmarshal func(interface{}) error) error {
+	var v int
+
+	if err := unmarshal(&v); err != nil {
 		return err
 	}
 

@@ -75,7 +75,7 @@ func (t StringOptional) GetOrElse(v string) string {
 	return v
 }
 
-//MarshalJSON marshals the contained string value into JSON representation.
+//MarshalJSON marshals the StringOptional type into the JSON representation.
 func (t StringOptional) MarshalJSON() ([]byte, error) {
 	if t.IsDefined() {
 		return json.Marshal(*t.v)
@@ -84,7 +84,7 @@ func (t StringOptional) MarshalJSON() ([]byte, error) {
 	return json.Marshal(nil)
 }
 
-//UnmarshalJSON marshals the contained string value into JSON representation.
+//UnmarshalJSON unmarshals the JSON representation to the StringOptional type.
 func (t *StringOptional) UnmarshalJSON(data []byte) error {
 	if data == nil {
 		return nil
@@ -97,6 +97,28 @@ func (t *StringOptional) UnmarshalJSON(data []byte) error {
 	var v string
 
 	if err := json.Unmarshal(data, &v); err != nil {
+		return err
+	}
+
+	t.v = &v
+
+	return nil
+}
+
+//MarshalYAML marshals the StringOptional type into the YAML representation.
+func (t StringOptional) MarshalYAML() (interface{}, error) {
+	if t.IsDefined() {
+		return *t.v, nil
+	}
+
+	return nil, nil
+}
+
+//UnmarshalYAML unmarshals the YAML representation to the StringOptional type.
+func (t *StringOptional) UnmarshalYAML(unmarshal func(interface{}) error) error {
+	var v string
+
+	if err := unmarshal(&v); err != nil {
 		return err
 	}
 

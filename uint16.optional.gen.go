@@ -75,7 +75,7 @@ func (t Uint16Optional) GetOrElse(v uint16) uint16 {
 	return v
 }
 
-//MarshalJSON marshals the contained uint16 value into JSON representation.
+//MarshalJSON marshals the Uint16Optional type into the JSON representation.
 func (t Uint16Optional) MarshalJSON() ([]byte, error) {
 	if t.IsDefined() {
 		return json.Marshal(*t.v)
@@ -84,7 +84,7 @@ func (t Uint16Optional) MarshalJSON() ([]byte, error) {
 	return json.Marshal(nil)
 }
 
-//UnmarshalJSON marshals the contained uint16 value into JSON representation.
+//UnmarshalJSON unmarshals the JSON representation to the Uint16Optional type.
 func (t *Uint16Optional) UnmarshalJSON(data []byte) error {
 	if data == nil {
 		return nil
@@ -97,6 +97,28 @@ func (t *Uint16Optional) UnmarshalJSON(data []byte) error {
 	var v uint16
 
 	if err := json.Unmarshal(data, &v); err != nil {
+		return err
+	}
+
+	t.v = &v
+
+	return nil
+}
+
+//MarshalYAML marshals the Uint16Optional type into the YAML representation.
+func (t Uint16Optional) MarshalYAML() (interface{}, error) {
+	if t.IsDefined() {
+		return *t.v, nil
+	}
+
+	return nil, nil
+}
+
+//UnmarshalYAML unmarshals the YAML representation to the Uint16Optional type.
+func (t *Uint16Optional) UnmarshalYAML(unmarshal func(interface{}) error) error {
+	var v uint16
+
+	if err := unmarshal(&v); err != nil {
 		return err
 	}
 

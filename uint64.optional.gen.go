@@ -75,7 +75,7 @@ func (t Uint64Optional) GetOrElse(v uint64) uint64 {
 	return v
 }
 
-//MarshalJSON marshals the contained uint64 value into JSON representation.
+//MarshalJSON marshals the Uint64Optional type into the JSON representation.
 func (t Uint64Optional) MarshalJSON() ([]byte, error) {
 	if t.IsDefined() {
 		return json.Marshal(*t.v)
@@ -84,7 +84,7 @@ func (t Uint64Optional) MarshalJSON() ([]byte, error) {
 	return json.Marshal(nil)
 }
 
-//UnmarshalJSON marshals the contained uint64 value into JSON representation.
+//UnmarshalJSON unmarshals the JSON representation to the Uint64Optional type.
 func (t *Uint64Optional) UnmarshalJSON(data []byte) error {
 	if data == nil {
 		return nil
@@ -97,6 +97,28 @@ func (t *Uint64Optional) UnmarshalJSON(data []byte) error {
 	var v uint64
 
 	if err := json.Unmarshal(data, &v); err != nil {
+		return err
+	}
+
+	t.v = &v
+
+	return nil
+}
+
+//MarshalYAML marshals the Uint64Optional type into the YAML representation.
+func (t Uint64Optional) MarshalYAML() (interface{}, error) {
+	if t.IsDefined() {
+		return *t.v, nil
+	}
+
+	return nil, nil
+}
+
+//UnmarshalYAML unmarshals the YAML representation to the Uint64Optional type.
+func (t *Uint64Optional) UnmarshalYAML(unmarshal func(interface{}) error) error {
+	var v uint64
+
+	if err := unmarshal(&v); err != nil {
 		return err
 	}
 

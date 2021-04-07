@@ -75,7 +75,7 @@ func (t UintOptional) GetOrElse(v uint) uint {
 	return v
 }
 
-//MarshalJSON marshals the contained uint value into JSON representation.
+//MarshalJSON marshals the UintOptional type into the JSON representation.
 func (t UintOptional) MarshalJSON() ([]byte, error) {
 	if t.IsDefined() {
 		return json.Marshal(*t.v)
@@ -84,7 +84,7 @@ func (t UintOptional) MarshalJSON() ([]byte, error) {
 	return json.Marshal(nil)
 }
 
-//UnmarshalJSON marshals the contained uint value into JSON representation.
+//UnmarshalJSON unmarshals the JSON representation to the UintOptional type.
 func (t *UintOptional) UnmarshalJSON(data []byte) error {
 	if data == nil {
 		return nil
@@ -97,6 +97,28 @@ func (t *UintOptional) UnmarshalJSON(data []byte) error {
 	var v uint
 
 	if err := json.Unmarshal(data, &v); err != nil {
+		return err
+	}
+
+	t.v = &v
+
+	return nil
+}
+
+//MarshalYAML marshals the UintOptional type into the YAML representation.
+func (t UintOptional) MarshalYAML() (interface{}, error) {
+	if t.IsDefined() {
+		return *t.v, nil
+	}
+
+	return nil, nil
+}
+
+//UnmarshalYAML unmarshals the YAML representation to the UintOptional type.
+func (t *UintOptional) UnmarshalYAML(unmarshal func(interface{}) error) error {
+	var v uint
+
+	if err := unmarshal(&v); err != nil {
 		return err
 	}
 

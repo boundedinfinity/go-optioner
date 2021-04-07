@@ -75,7 +75,7 @@ func (t Uint8Optional) GetOrElse(v uint8) uint8 {
 	return v
 }
 
-//MarshalJSON marshals the contained uint8 value into JSON representation.
+//MarshalJSON marshals the Uint8Optional type into the JSON representation.
 func (t Uint8Optional) MarshalJSON() ([]byte, error) {
 	if t.IsDefined() {
 		return json.Marshal(*t.v)
@@ -84,7 +84,7 @@ func (t Uint8Optional) MarshalJSON() ([]byte, error) {
 	return json.Marshal(nil)
 }
 
-//UnmarshalJSON marshals the contained uint8 value into JSON representation.
+//UnmarshalJSON unmarshals the JSON representation to the Uint8Optional type.
 func (t *Uint8Optional) UnmarshalJSON(data []byte) error {
 	if data == nil {
 		return nil
@@ -97,6 +97,28 @@ func (t *Uint8Optional) UnmarshalJSON(data []byte) error {
 	var v uint8
 
 	if err := json.Unmarshal(data, &v); err != nil {
+		return err
+	}
+
+	t.v = &v
+
+	return nil
+}
+
+//MarshalYAML marshals the Uint8Optional type into the YAML representation.
+func (t Uint8Optional) MarshalYAML() (interface{}, error) {
+	if t.IsDefined() {
+		return *t.v, nil
+	}
+
+	return nil, nil
+}
+
+//UnmarshalYAML unmarshals the YAML representation to the Uint8Optional type.
+func (t *Uint8Optional) UnmarshalYAML(unmarshal func(interface{}) error) error {
+	var v uint8
+
+	if err := unmarshal(&v); err != nil {
 		return err
 	}
 
