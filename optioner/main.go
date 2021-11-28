@@ -2,22 +2,29 @@ package main
 
 import (
 	"bytes"
+	"errors"
 	"flag"
 	"fmt"
 	"go/format"
 	"io/ioutil"
 	"log"
 	"os"
-	"path"
+	"path/filepath"
 	"strings"
 	"text/template"
 )
 
+const (
+	FilePermissions = 0755
+)
+
 type data struct {
-	Type    string
-	Name    string
-	Package string
-	Path    string
+	Type     string
+	Name     string
+	Package  string
+	Dir      string
+	Filename string
+	Path     string
 }
 
 func main() {
@@ -25,45 +32,111 @@ func main() {
 	flag.StringVar(&d.Type, "type", "", "The type used for the option being generated")
 	flag.StringVar(&d.Name, "name", "", "The name used for the option being generated. This should start with a capital letter so that it is exported.")
 	flag.StringVar(&d.Package, "package", "", "The package used for the option being generated.")
-	flag.StringVar(&d.Path, "path", "", "The output path used for the option being generated.")
+	flag.StringVar(&d.Dir, "dir", "", "The output directory used for the option being generated.")
+	flag.StringVar(&d.Filename, "filename", "", "The filename used for the option being generated.")
 	flag.Parse()
 
-	if d.Type == "" {
-		fmt.Println("must provide 'type' parameter")
-		os.Exit(1)
+	if err := processType(&d); err != nil {
+		handleErr(err)
 	}
 
-	if d.Package == "" {
-		d.Package = "optioner"
+	if err := processPath(&d); err != nil {
+		handleErr(err)
 	}
 
-	if d.Path == "" {
-		d.Path = "."
-	}
-
-	if d.Name == "" {
-		d.Name = strings.Title(d.Type)
-	}
-
-	n := fmt.Sprintf("%v.optioner.go", d.Name)
-	t := template.Must(template.New(n).Parse(tmpl))
-	var buf1 bytes.Buffer
-
-	if err := t.Execute(&buf1, d); err != nil {
-		log.Fatal(err.Error())
-	}
-
-	buf2, err := format.Source(buf1.Bytes())
+	bs, err := processTemplate(d)
 
 	if err != nil {
-		log.Fatal(err.Error())
+		handleErr(err)
 	}
 
-	p := path.Join(d.Path, strings.ToLower(n))
-
-	if err := ioutil.WriteFile(p, buf2, 0755); err != nil {
-		log.Fatal(err.Error())
+	if err := processWrite(d, bs); err != nil {
+		handleErr(err)
 	}
+}
+
+func handleErr(err error) {
+	log.Fatal(err)
+	os.Exit(1)
+}
+
+func processType(args *data) error {
+	if args.Type == "" {
+		return errors.New("must provide 'type' parameter")
+	}
+
+	if args.Name == "" {
+		args.Name = strings.Title(args.Type)
+	}
+
+	if args.Package == "" {
+		args.Package = "optioner"
+	}
+
+	return nil
+}
+
+func processPath(args *data) error {
+	if args.Dir == "" {
+		cwd, err := os.Getwd()
+
+		if err != nil {
+			return err
+		}
+
+		base := filepath.Base(cwd)
+
+		if base != args.Package {
+			args.Dir = filepath.Join(".", args.Package)
+		}
+	}
+
+	if args.Filename == "" {
+		args.Filename = fmt.Sprintf("%v.optioner.go", args.Name)
+	}
+
+	args.Path = filepath.Join(args.Dir, args.Filename)
+
+	return nil
+}
+
+func processWrite(data data, bs []byte) error {
+	err := os.MkdirAll(data.Dir, FilePermissions)
+
+	if err != nil {
+		return err
+	}
+
+	if err := ioutil.WriteFile(data.Path, bs, FilePermissions); err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func processTemplate(args data) ([]byte, error) {
+	funcs := template.FuncMap{
+		"title": func(s string) string {
+			return strings.Title(s)
+		},
+	}
+
+	var t *template.Template
+	var err error
+
+	t, err = template.New(args.Filename).Funcs(funcs).Parse(tmpl)
+
+	if err != nil {
+		return []byte{}, nil
+	}
+
+	var b bytes.Buffer
+
+	if err := t.Execute(&b, args); err != nil {
+		return []byte{}, nil
+	}
+
+	return format.Source(b.Bytes())
 }
 
 var tmpl = `
