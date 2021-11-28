@@ -22,10 +22,10 @@ type data struct {
 
 func main() {
 	var d data
-	flag.StringVar(&d.Type, "type", "", "The type used for the optional being generated")
-	flag.StringVar(&d.Name, "name", "", "The name used for the optinoal being generated. This should start with a capital letter so that it is exported.")
-	flag.StringVar(&d.Package, "package", "", "The package used for the optinoal being generated.")
-	flag.StringVar(&d.Path, "path", "", "The output path used for the optinoal being generated.")
+	flag.StringVar(&d.Type, "type", "", "The type used for the option being generated")
+	flag.StringVar(&d.Name, "name", "", "The name used for the option being generated. This should start with a capital letter so that it is exported.")
+	flag.StringVar(&d.Package, "package", "", "The package used for the option being generated.")
+	flag.StringVar(&d.Path, "path", "", "The output path used for the option being generated.")
 	flag.Parse()
 
 	if d.Type == "" {
@@ -34,7 +34,7 @@ func main() {
 	}
 
 	if d.Package == "" {
-		d.Package = "optional"
+		d.Package = "optioner"
 	}
 
 	if d.Path == "" {
@@ -45,7 +45,7 @@ func main() {
 		d.Name = strings.Title(d.Type)
 	}
 
-	n := fmt.Sprintf("%v.optional.gen.go", d.Name)
+	n := fmt.Sprintf("%v.optioner.go", d.Name)
 	t := template.Must(template.New(n).Parse(tmpl))
 	var buf1 bytes.Buffer
 
@@ -74,21 +74,21 @@ import (
 	"encoding/json"
 )
 
-// {{.Name}}Optional contains a initialized or empty copy of the {{.Type}} type.
-type {{.Name}}Optional struct {
+// {{.Name}}Option contains a initialized or empty copy of the {{.Type}} type.
+type {{.Name}}Option struct {
 	v *{{.Type}}
 }
 
-// New{{.Name}}Value creates a new {{.Name}}Optional type with an initialized value.
-func New{{.Name}}Value(v {{.Type}}) {{.Name}}Optional {
-	return {{.Name}}Optional{
+// New{{.Name}}Value creates a new {{.Name}}Option type with an initialized value.
+func New{{.Name}}Value(v {{.Type}}) {{.Name}}Option {
+	return {{.Name}}Option{
 		v: &v,
 	}
 }
 
-// New{{.Name}}Value creates a new {{.Name}}Optional type with the given value.
-func New{{.Name}}Ptr(v *{{.Type}}) {{.Name}}Optional {
-	return {{.Name}}Optional{
+// New{{.Name}}Value creates a new {{.Name}}Option type with the given value.
+func New{{.Name}}Ptr(v *{{.Type}}) {{.Name}}Option {
+	return {{.Name}}Option{
 		v: v,
 	}
 }
@@ -98,13 +98,13 @@ func {{.Name}}2Ptr(v {{.Type}}) *{{.Type}} {
 	return &v
 }
 
-// New{{.Name}}Value creates a new {{.Name}}Optional type with an empty value.
-func New{{.Name}}Empty() {{.Name}}Optional {
-	return {{.Name}}Optional{}
+// New{{.Name}}Value creates a new {{.Name}}Option type with an empty value.
+func New{{.Name}}Empty() {{.Name}}Option {
+	return {{.Name}}Option{}
 }
 
-// New{{.Name}}EmptyIfZeroValue creates a new initialized {{.Name}}Optional type if the input {{.Type}} doesn't equal the {{.Type}}'s zero value, or an empty {{.Name}}Optional otherwise.
-func New{{.Name}}EmptyIfZeroValue(v {{.Type}}) {{.Name}}Optional {
+// New{{.Name}}EmptyIfZeroValue creates a new initialized {{.Name}}Option type if the input {{.Type}} doesn't equal the {{.Type}}'s zero value, or an empty {{.Name}}Option otherwise.
+func New{{.Name}}EmptyIfZeroValue(v {{.Type}}) {{.Name}}Option {
 	var e {{.Type}}
 
 	if v == e {
@@ -115,18 +115,18 @@ func New{{.Name}}EmptyIfZeroValue(v {{.Type}}) {{.Name}}Optional {
 }
 
 //IsEmpty returns true if the contained {{.Type}} value is empty, false otherwise.
-func (t {{.Name}}Optional) IsEmpty() bool {
+func (t {{.Name}}Option) IsEmpty() bool {
 	return t.v == nil
 }
 
 //IsDefined returns true if the contained {{.Type}} value is initialized, false otherwise.
-func (t {{.Name}}Optional) IsDefined() bool {
+func (t {{.Name}}Option) IsDefined() bool {
 	return !t.IsEmpty()
 }
 
 //Get returns the contained {{.Type}} value.
 //NOTE: If the value is empty, this will return the {{.Type}} zero value.
-func (t {{.Name}}Optional) Get() {{.Type}} {
+func (t {{.Name}}Option) Get() {{.Type}} {
 	var v {{.Type}}
 
 	if t.IsEmpty() {
@@ -137,7 +137,7 @@ func (t {{.Name}}Optional) Get() {{.Type}} {
 }
 
 //Get returns the contained {{.Type}} value if the contained value is initialized or the input value is the value is not initialized.
-func (t {{.Name}}Optional) GetOrElse(v {{.Type}}) {{.Type}} {
+func (t {{.Name}}Option) GetOrElse(v {{.Type}}) {{.Type}} {
 	if t.IsDefined() {
 		return t.Get()
 	}
@@ -145,8 +145,8 @@ func (t {{.Name}}Optional) GetOrElse(v {{.Type}}) {{.Type}} {
 	return v
 }
 
-//MarshalJSON marshals the {{.Name}}Optional type into the JSON representation.
-func (t {{.Name}}Optional) MarshalJSON() ([]byte, error) {
+//MarshalJSON marshals the {{.Name}}Option type into the JSON representation.
+func (t {{.Name}}Option) MarshalJSON() ([]byte, error) {
 	if t.IsDefined() {
 		return json.Marshal(*t.v)
 	}
@@ -154,8 +154,8 @@ func (t {{.Name}}Optional) MarshalJSON() ([]byte, error) {
 	return json.Marshal(nil)
 }
 
-//UnmarshalJSON unmarshals the JSON representation to the {{.Name}}Optional type.
-func (t *{{.Name}}Optional) UnmarshalJSON(data []byte) error {
+//UnmarshalJSON unmarshals the JSON representation to the {{.Name}}Option type.
+func (t *{{.Name}}Option) UnmarshalJSON(data []byte) error {
 	if data == nil {
 		return nil
 	}
@@ -175,8 +175,8 @@ func (t *{{.Name}}Optional) UnmarshalJSON(data []byte) error {
 	return nil
 }
 
-//MarshalYAML marshals the {{.Name}}Optional type into the YAML representation.
-func (t {{.Name}}Optional) MarshalYAML() (interface{}, error) {
+//MarshalYAML marshals the {{.Name}}Option type into the YAML representation.
+func (t {{.Name}}Option) MarshalYAML() (interface{}, error) {
 	if t.IsDefined() {
 		return *t.v, nil
 	}
@@ -185,8 +185,8 @@ func (t {{.Name}}Optional) MarshalYAML() (interface{}, error) {
 }
 
 
-//UnmarshalYAML unmarshals the YAML representation to the {{.Name}}Optional type.
-func (t *{{.Name}}Optional) UnmarshalYAML(unmarshal func(interface{}) error) error {
+//UnmarshalYAML unmarshals the YAML representation to the {{.Name}}Option type.
+func (t *{{.Name}}Option) UnmarshalYAML(unmarshal func(interface{}) error) error {
 	var v {{.Type}}
 
 	if err := unmarshal(&v); err != nil {
@@ -198,7 +198,7 @@ func (t *{{.Name}}Optional) UnmarshalYAML(unmarshal func(interface{}) error) err
 	return nil
 }
 
-func (t *{{.Name}}Optional) String() string {
+func (t *{{.Name}}Option) String() string {
 	return fmt.Sprintf("%v", t.Get())
 }
 `

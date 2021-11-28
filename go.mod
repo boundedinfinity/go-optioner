@@ -1,4 +1,4 @@
-module github.com/boundedinfinity/optional
+module github.com/boundedinfinity/optioner
 
 go 1.13
 

@@ -1,4 +1,4 @@
-package optional
+package optioner
 
 func StrPtr(v string) *string {
 	return &v
