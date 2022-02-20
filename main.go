@@ -1,20 +1,13 @@
 package optioner
 
-//go:generate optioner -type=string
+import (
+	"fmt"
+)
 
-//go:generate optioner -type=bool
+type Option[T comparable] struct {
+	v *T
+}
 
-//go:generate optioner -type=int
-//go:generate optioner -type=int8
-//go:generate optioner -type=int16
-//go:generate optioner -type=int32
-//go:generate optioner -type=int64
-
-//go:generate optioner -type=uint
-//go:generate optioner -type=uint8
-//go:generate optioner -type=uint16
-//go:generate optioner -type=uint32
-//go:generate optioner -type=uint64
-
-//go:generate optioner -type=float32
-//go:generate optioner -type=float64
+func (t Option[T]) String() string {
+	return fmt.Sprintf("%v", t.Get())
+}
