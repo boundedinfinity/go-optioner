@@ -31,7 +31,7 @@ var _ = Describe("JSON Serialization / Deserialization", func() {
 		It("should deserialize a string", func() {
 			input := []byte(`"s"`)
 			expected := optioner.Some("s")
-			var actual optioner.Option[string]
+			var actual optioner.Optioner[string]
 
 			err := json.Unmarshal(input, &actual)
 
@@ -44,7 +44,7 @@ var _ = Describe("JSON Serialization / Deserialization", func() {
 		It("should deserialize a null string", func() {
 			input := []byte(`null`)
 			expected := optioner.None[string]()
-			var actual optioner.Option[string]
+			var actual optioner.Optioner[string]
 
 			err := json.Unmarshal(input, &actual)
 
@@ -77,7 +77,7 @@ var _ = Describe("JSON Serialization / Deserialization", func() {
 		It("should deserialize an int", func() {
 			input := []byte(`1`)
 			expected := optioner.Some(1)
-			var actual optioner.Option[int]
+			var actual optioner.Optioner[int]
 
 			err := json.Unmarshal(input, &actual)
 
@@ -90,7 +90,7 @@ var _ = Describe("JSON Serialization / Deserialization", func() {
 		It("should deserialize a null int", func() {
 			input := []byte(`null`)
 			expected := optioner.None[int]()
-			var actual optioner.Option[int]
+			var actual optioner.Optioner[int]
 
 			err := json.Unmarshal(input, &actual)
 

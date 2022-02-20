@@ -67,7 +67,7 @@ var _ = Describe("Constructors", func() {
 
 	Describe("Optional()", func() {
 		It("should work with a nil string pointer", func() {
-			actual := optioner.Optional[string](nil)
+			actual := optioner.Option[string](nil)
 
 			Expect(actual.IsEmpty()).To(BeTrue())
 			Expect(actual.Defined()).To(BeFalse())
@@ -77,7 +77,7 @@ var _ = Describe("Constructors", func() {
 
 		It("should work with a non-nil string pointer", func() {
 			v := "s"
-			actual := optioner.Optional[string](&v)
+			actual := optioner.Option[string](&v)
 
 			Expect(actual.IsEmpty()).To(BeFalse())
 			Expect(actual.Defined()).To(BeTrue())
@@ -86,7 +86,7 @@ var _ = Describe("Constructors", func() {
 		})
 
 		It("should work with a nil int pointer", func() {
-			actual := optioner.Optional[int](nil)
+			actual := optioner.Option[int](nil)
 
 			Expect(actual.IsEmpty()).To(BeTrue())
 			Expect(actual.Defined()).To(BeFalse())
@@ -96,7 +96,7 @@ var _ = Describe("Constructors", func() {
 
 		It("should work with a non-nil int pointer", func() {
 			v := 1
-			actual := optioner.Optional[int](&v)
+			actual := optioner.Option[int](&v)
 
 			Expect(actual.IsEmpty()).To(BeFalse())
 			Expect(actual.Defined()).To(BeTrue())

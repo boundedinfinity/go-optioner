@@ -3,7 +3,7 @@ package optioner
 import "encoding/json"
 
 // MarshalJSON implements the encoding/json#Marshaler interface
-func (t Option[T]) MarshalJSON() ([]byte, error) {
+func (t Optioner[T]) MarshalJSON() ([]byte, error) {
 	if t.IsDefined() {
 		return json.Marshal(*t.v)
 	}
@@ -12,7 +12,7 @@ func (t Option[T]) MarshalJSON() ([]byte, error) {
 }
 
 // UnmarshalJSON implements the encoding/json#Unmarshaler interface
-func (t *Option[T]) UnmarshalJSON(data []byte) error {
+func (t *Optioner[T]) UnmarshalJSON(data []byte) error {
 	if data == nil {
 		return nil
 	}
