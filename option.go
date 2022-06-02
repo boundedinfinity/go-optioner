@@ -28,7 +28,7 @@ func (t Optioner[T]) IsDefined() bool {
 }
 
 // Get returns the contained value.  If called and Empty() is true, the
-// value will be the types zero value.
+// value will be the type's zero value.
 func (t Optioner[T]) Get() T {
 	if t.IsDefined() {
 		return *t.v
@@ -40,17 +40,18 @@ func (t Optioner[T]) Get() T {
 
 // OrElse returns the contained value if Defined() is true or returns
 // the given value otherwise.
+//
+// Alias for GetOrElse()
 func (t Optioner[T]) OrElse(v T) T {
+	return t.GetOrElse(v)
+}
+
+// GetOrElse returns the contained value if Defined() is true or returns
+// the given value otherwise.
+func (t Optioner[T]) GetOrElse(v T) T {
 	if t.Empty() {
 		return v
 	}
 
 	return *t.v
-}
-
-// GetOrElse returns the contained value if Defined() is true or returns
-// the given value otherwise.
-// Alias for OrElse()
-func (t Optioner[T]) GetOrElse(v T) T {
-	return t.OrElse(v)
 }
