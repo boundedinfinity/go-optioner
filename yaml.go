@@ -2,7 +2,7 @@ package optioner
 
 // MarshalYAML implements the gopkg.in/yaml.v2#Marshal interface
 func (t Optioner[T]) MarshalYAML() (interface{}, error) {
-	if t.IsDefined() {
+	if t.Defined() {
 		return *t.v, nil
 	}
 

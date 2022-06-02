@@ -4,7 +4,7 @@ import "encoding/json"
 
 // MarshalJSON implements the encoding/json#Marshaler interface
 func (t Optioner[T]) MarshalJSON() ([]byte, error) {
-	if t.IsDefined() {
+	if t.Defined() {
 		return json.Marshal(*t.v)
 	}
 
