@@ -1,5 +1,10 @@
 package optioner
 
+// Optioner[T] is a container for zero or one element of a given type.
+type Optioner[T any] struct {
+	v *T
+}
+
 // Empty returns true if the contained value is empty, false otherwise
 func (t Optioner[T]) Empty() bool {
 	return t.v == nil
@@ -28,7 +33,7 @@ func (t Optioner[T]) Get() T {
 	if t.IsDefined() {
 		return *t.v
 	}
-	
+
 	var zero T
 	return zero
 }
