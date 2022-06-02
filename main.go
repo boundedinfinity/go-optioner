@@ -4,8 +4,8 @@ import (
 	"fmt"
 )
 
-// Optioner[T] is a container for zero or one element of a given type. 
-type Optioner[T comparable] struct {
+// Optioner[T] is a container for zero or one element of a given type.
+type Optioner[T any] struct {
 	v *T
 }
 
