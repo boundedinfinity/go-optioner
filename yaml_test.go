@@ -1,102 +1,96 @@
 package optioner_test
 
 import (
+	"testing"
+
 	"github.com/boundedinfinity/optioner"
-	. "github.com/onsi/ginkgo/v2"
-	. "github.com/onsi/gomega"
+	"github.com/stretchr/testify/assert"
 	"gopkg.in/yaml.v2"
 )
 
-var _ = Describe("YAML Serialization / Deserialization", func() {
-	Describe("Serialize/Deserialize string", func() {
-		It("should serialize a string", func() {
-			input := optioner.Some("s")
-			expected := []byte("s\n")
-			actual, err := yaml.Marshal(input)
+func Test_YAML_serialize_string(t *testing.T) {
+	input := optioner.Some("s")
+	expected := []byte("s\n")
+	actual, err := yaml.Marshal(input)
 
-			Expect(err).To(BeNil())
-			Expect(actual).To(Equal(expected))
-		})
+	assert.Nil(t, err)
+	assert.Equal(t, expected, actual)
+}
 
-		It("should serialize an empty string", func() {
-			input := optioner.None[string]()
-			expected := []byte("null\n")
-			actual, err := yaml.Marshal(input)
+func Test_YAML_serialize_empty_string(t *testing.T) {
+	input := optioner.None[string]()
+	expected := []byte("null\n")
+	actual, err := yaml.Marshal(input)
+	assert.Nil(t, err)
+	assert.Equal(t, expected, actual)
+}
 
-			Expect(err).To(BeNil())
-			Expect(actual).To(Equal(expected))
-		})
+func Test_YAML_deserialize_string(t *testing.T) {
+	input := []byte("s\n")
+	expected := optioner.Some("s")
+	var actual optioner.Optioner[string]
 
-		It("should deserialize a string", func() {
-			input := []byte("s\n")
-			expected := optioner.Some("s")
-			var actual optioner.Optioner[string]
+	err := yaml.Unmarshal(input, &actual)
 
-			err := yaml.Unmarshal(input, &actual)
+	assert.Nil(t, err)
+	assert.Equal(t, expected.Get(), actual.Get())
+	assert.Equal(t, expected.Empty(), actual.Empty())
+	assert.Equal(t, expected.Defined(), actual.Defined())
+}
 
-			Expect(err).To(BeNil())
-			Expect(actual.Get()).To(Equal(expected.Get()))
-			Expect(actual.Empty()).To(Equal(expected.Empty()))
-			Expect(actual.Defined()).To(Equal(expected.Defined()))
-		})
+func Test_YAML_deserialize_nil_string(t *testing.T) {
+	input := []byte("null\n")
+	expected := optioner.None[string]()
+	var actual optioner.Optioner[string]
 
-		It("should deserialize a null string", func() {
-			input := []byte("null\n")
-			expected := optioner.None[string]()
-			var actual optioner.Optioner[string]
+	err := yaml.Unmarshal(input, &actual)
 
-			err := yaml.Unmarshal(input, &actual)
+	assert.Nil(t, err)
+	assert.Equal(t, expected.Get(), actual.Get())
+	assert.Equal(t, expected.Empty(), actual.Empty())
+	assert.Equal(t, expected.Defined(), actual.Defined())
+}
 
-			Expect(err).To(BeNil())
-			Expect(actual.Get()).To(Equal(expected.Get()))
-			Expect(actual.Empty()).To(Equal(expected.Empty()))
-			Expect(actual.Defined()).To(Equal(expected.Defined()))
-		})
-	})
+func Test_YAML_serialize_int(t *testing.T) {
+	input := optioner.Some(1)
+	expected := []byte("1\n")
+	actual, err := yaml.Marshal(input)
 
-	Describe("Serialize/Deserialize int", func() {
-		It("should serialize an int", func() {
-			input := optioner.Some(1)
-			expected := []byte("1\n")
-			actual, err := yaml.Marshal(input)
+	assert.Nil(t, err)
+	assert.Equal(t, expected, actual)
+}
 
-			Expect(err).To(BeNil())
-			Expect(actual).To(Equal(expected))
-		})
+func Test_YAML_serialize_int_empty(t *testing.T) {
+	input := optioner.None[int]()
+	expected := []byte("null\n")
+	actual, err := yaml.Marshal(input)
 
-		It("should serialize an empty int", func() {
-			input := optioner.None[int]()
-			expected := []byte("null\n")
-			actual, err := yaml.Marshal(input)
+	assert.Nil(t, err)
+	assert.Equal(t, expected, actual)
+}
 
-			Expect(err).To(BeNil())
-			Expect(actual).To(Equal(expected))
-		})
+func Test_YAML_deserialize_int(t *testing.T) {
+	input := []byte("1\n")
+	expected := optioner.Some(1)
+	var actual optioner.Optioner[int]
 
-		It("should deserialize an int", func() {
-			input := []byte("1\n")
-			expected := optioner.Some(1)
-			var actual optioner.Optioner[int]
+	err := yaml.Unmarshal(input, &actual)
 
-			err := yaml.Unmarshal(input, &actual)
+	assert.Nil(t, err)
+	assert.Equal(t, expected.Get(), actual.Get())
+	assert.Equal(t, expected.Empty(), actual.Empty())
+	assert.Equal(t, expected.Defined(), actual.Defined())
+}
 
-			Expect(err).To(BeNil())
-			Expect(actual.Get()).To(Equal(expected.Get()))
-			Expect(actual.Empty()).To(Equal(expected.Empty()))
-			Expect(actual.Defined()).To(Equal(expected.Defined()))
-		})
+func Test_YAML_deserialize_int_empty(t *testing.T) {
+	input := []byte("null\n")
+	expected := optioner.None[int]()
+	var actual optioner.Optioner[int]
 
-		It("should deserialize a null int", func() {
-			input := []byte("null\n")
-			expected := optioner.None[int]()
-			var actual optioner.Optioner[int]
+	err := yaml.Unmarshal(input, &actual)
 
-			err := yaml.Unmarshal(input, &actual)
-
-			Expect(err).To(BeNil())
-			Expect(actual.Get()).To(Equal(expected.Get()))
-			Expect(actual.Empty()).To(Equal(expected.Empty()))
-			Expect(actual.Defined()).To(Equal(expected.Defined()))
-		})
-	})
-})
+	assert.Nil(t, err)
+	assert.Equal(t, expected.Get(), actual.Get())
+	assert.Equal(t, expected.Empty(), actual.Empty())
+	assert.Equal(t, expected.Defined(), actual.Defined())
+}

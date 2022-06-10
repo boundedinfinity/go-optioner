@@ -1,107 +1,100 @@
 package optioner_test
 
 import (
+	"testing"
+
 	"github.com/boundedinfinity/optioner"
-	. "github.com/onsi/ginkgo/v2"
-	. "github.com/onsi/gomega"
+	"github.com/stretchr/testify/assert"
 )
 
-var _ = Describe("Constructors", func() {
-	Describe("Some()", func() {
-		It("should work with a string", func() {
-			actual := optioner.Some("s")
+func Test_Some_with_string(t *testing.T) {
+	actual := optioner.Some("s")
 
-			Expect(actual.Empty()).To(BeFalse())
-			Expect(actual.Defined()).To(BeTrue())
-			Expect(actual.Get()).To(Equal("s"))
-			Expect(actual.OrElse("x")).To(Equal("s"))
-		})
+	assert.Equal(t, actual.Empty(), false)
+	assert.Equal(t, actual.Defined(), true)
+	assert.Equal(t, actual.Get(), "s")
+	assert.Equal(t, actual.OrElse("x"), "s")
+}
 
-		It("should work with an int", func() {
-			actual := optioner.Some(1)
+func Test_Some_with_int(t *testing.T) {
+	actual := optioner.Some(1)
 
-			Expect(actual.Empty()).To(BeFalse())
-			Expect(actual.Defined()).To(BeTrue())
-			Expect(actual.Get()).To(Equal(1))
-			Expect(actual.OrElse(2)).To(Equal(1))
-		})
+	assert.Equal(t, actual.Empty(), false)
+	assert.Equal(t, actual.Defined(), true)
+	assert.Equal(t, actual.Get(), 1)
+	assert.Equal(t, actual.OrElse(1), 1)
+}
 
-		It("should work with a boolean", func() {
-			actual := optioner.Some(false)
+func Test_Some_with_boolean(t *testing.T) {
+	actual := optioner.Some(false)
 
-			Expect(actual.Empty()).To(BeFalse())
-			Expect(actual.Defined()).To(BeTrue())
-			Expect(actual.Get()).To(Equal(false))
-			Expect(actual.OrElse(true)).To(Equal(false))
-		})
-	})
+	assert.Equal(t, actual.Empty(), false)
+	assert.Equal(t, actual.Defined(), true)
+	assert.Equal(t, actual.Get(), false)
+	assert.Equal(t, actual.OrElse(true), false)
+}
 
-	Describe("None()", func() {
-		It("should work with a string", func() {
-			actual := optioner.None[string]()
+func Test_None_with_string(t *testing.T) {
+	actual := optioner.None[string]()
 
-			Expect(actual.Empty()).To(BeTrue())
-			Expect(actual.Defined()).To(BeFalse())
-			Expect(actual.Get()).To(Equal(""))
-			Expect(actual.OrElse("x")).To(Equal("x"))
-		})
+	assert.Equal(t, actual.Empty(), true)
+	assert.Equal(t, actual.Defined(), false)
+	assert.Equal(t, actual.Get(), "")
+	assert.Equal(t, actual.OrElse("x"), "x")
+}
 
-		It("should work with an int", func() {
-			actual := optioner.None[int]()
+func Test_None_with_int(t *testing.T) {
+	actual := optioner.None[int]()
 
-			Expect(actual.Empty()).To(BeTrue())
-			Expect(actual.Defined()).To(BeFalse())
-			Expect(actual.Get()).To(Equal(0))
-			Expect(actual.OrElse(1)).To(Equal(1))
-		})
+	assert.Equal(t, actual.Empty(), true)
+	assert.Equal(t, actual.Defined(), false)
+	assert.Equal(t, actual.Get(), 0)
+	assert.Equal(t, actual.OrElse(1), 1)
+}
 
-		It("should work with a boolean", func() {
-			actual := optioner.None[bool]()
+func Test_None_with_bool(t *testing.T) {
+	actual := optioner.None[bool]()
 
-			Expect(actual.Empty()).To(BeTrue())
-			Expect(actual.Defined()).To(BeFalse())
-			Expect(actual.Get()).To(Equal(false))
-			Expect(actual.OrElse(true)).To(Equal(true))
-		})
-	})
+	assert.Equal(t, actual.Empty(), true)
+	assert.Equal(t, actual.Defined(), false)
+	assert.Equal(t, actual.Get(), false)
+	assert.Equal(t, actual.OrElse(true), true)
+}
 
-	Describe("Optional()", func() {
-		It("should work with a nil string pointer", func() {
-			actual := optioner.Option[string](nil)
+func Test_Option_with_nil_string(t *testing.T) {
+	actual := optioner.Option[string](nil)
 
-			Expect(actual.Empty()).To(BeTrue())
-			Expect(actual.Defined()).To(BeFalse())
-			Expect(actual.Get()).To(Equal(""))
-			Expect(actual.OrElse("x")).To(Equal("x"))
-		})
+	assert.Equal(t, actual.Empty(), true)
+	assert.Equal(t, actual.Defined(), false)
+	assert.Equal(t, actual.Get(), "")
+	assert.Equal(t, actual.OrElse("x"), "x")
+}
 
-		It("should work with a non-nil string pointer", func() {
-			v := "s"
-			actual := optioner.Option[string](&v)
+func Test_Option_with_string(t *testing.T) {
+	v := "s"
+	actual := optioner.Option(&v)
 
-			Expect(actual.Empty()).To(BeFalse())
-			Expect(actual.Defined()).To(BeTrue())
-			Expect(actual.Get()).To(Equal("s"))
-			Expect(actual.OrElse("x")).To(Equal("s"))
-		})
+	assert.Equal(t, actual.Empty(), false)
+	assert.Equal(t, actual.Defined(), true)
+	assert.Equal(t, actual.Get(), "s")
+	assert.Equal(t, actual.OrElse("x"), "s")
+}
 
-		It("should work with a nil int pointer", func() {
-			actual := optioner.Option[int](nil)
+func Test_Option_with_nil_int(t *testing.T) {
+	actual := optioner.Option[int](nil)
 
-			Expect(actual.Empty()).To(BeTrue())
-			Expect(actual.Defined()).To(BeFalse())
-			Expect(actual.Get()).To(Equal(0))
-			Expect(actual.OrElse(2)).To(Equal(2))
-		})
+	assert.Equal(t, actual.Empty(), true)
+	assert.Equal(t, actual.Defined(), false)
+	assert.Equal(t, actual.Get(), 0)
+	assert.Equal(t, actual.OrElse(1), 1)
+}
 
-		It("should work with a non-nil int pointer", func() {
-			v := 1
-			actual := optioner.Option[int](&v)
+func Test_Option_with_int(t *testing.T) {
+	v := 1
+	actual := optioner.Option(&v)
 
-			Expect(actual.Empty()).To(BeFalse())
-			Expect(actual.Defined()).To(BeTrue())
-			Expect(actual.Get()).To(Equal(1))
-			Expect(actual.OrElse(2)).To(Equal(1))
-		})
-	})
-})
+	assert.Equal(t, actual.Empty(), false)
+	assert.Equal(t, actual.Defined(), true)
+	assert.Equal(t, actual.Get(), 1)
+	assert.Equal(t, actual.OrElse(2), 1)
+}

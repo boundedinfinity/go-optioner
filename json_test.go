@@ -2,102 +2,104 @@ package optioner_test
 
 import (
 	"encoding/json"
+	"testing"
 
 	"github.com/boundedinfinity/optioner"
-	. "github.com/onsi/ginkgo/v2"
-	. "github.com/onsi/gomega"
+	"github.com/stretchr/testify/assert"
 )
 
-var _ = Describe("JSON Serialization / Deserialization", func() {
-	Describe("Serialize/Deserialize string", func() {
-		It("should serialize a string", func() {
-			input := optioner.Some("s")
-			expected := []byte(`"s"`)
-			actual, err := json.Marshal(input)
+func Test_JSON_serialize_string(t *testing.T) {
+	input := optioner.Some("s")
+	expected := []byte(`"s"`)
+	actual, err := json.Marshal(input)
 
-			Expect(err).To(BeNil())
-			Expect(actual).To(Equal(expected))
-		})
+	assert.Nil(t, err)
+	assert.Equal(t, expected, actual)
+}
 
-		It("should serialize an empty string", func() {
-			input := optioner.None[string]()
-			expected := []byte(`null`)
-			actual, err := json.Marshal(input)
+func Test_JSON_serialize_empty_string(t *testing.T) {
+	input := optioner.None[string]()
+	expected := []byte(`null`)
+	actual, err := json.Marshal(input)
 
-			Expect(err).To(BeNil())
-			Expect(actual).To(Equal(expected))
-		})
+	assert.Nil(t, err)
+	assert.Equal(t, expected, actual)
+}
 
-		It("should deserialize a string", func() {
-			input := []byte(`"s"`)
-			expected := optioner.Some("s")
-			var actual optioner.Optioner[string]
+func Test_JSON_deserialize_string(t *testing.T) {
+	input := []byte(`"s"`)
+	expected := optioner.Some("s")
+	var actual optioner.Optioner[string]
+	err := json.Unmarshal(input, &actual)
 
-			err := json.Unmarshal(input, &actual)
+	assert.Nil(t, err)
+	assert.Equal(t, expected.Get(), actual.Get())
+	assert.Equal(t, expected.Empty(), actual.Empty())
+	assert.Equal(t, expected.Defined(), actual.Defined())
+}
 
-			Expect(err).To(BeNil())
-			Expect(actual.Get()).To(Equal(expected.Get()))
-			Expect(actual.Empty()).To(Equal(expected.Empty()))
-			Expect(actual.Defined()).To(Equal(expected.Defined()))
-		})
+func Test_JSON_deserialize_nil_string(t *testing.T) {
+	input := []byte(`null`)
+	expected := optioner.None[string]()
+	var actual optioner.Optioner[string]
+	err := json.Unmarshal(input, &actual)
 
-		It("should deserialize a null string", func() {
-			input := []byte(`null`)
-			expected := optioner.None[string]()
-			var actual optioner.Optioner[string]
+	assert.Nil(t, err)
+	assert.Equal(t, expected.Get(), actual.Get())
+	assert.Equal(t, expected.Empty(), actual.Empty())
+	assert.Equal(t, expected.Defined(), actual.Defined())
+}
 
-			err := json.Unmarshal(input, &actual)
+func Test_JSON_serialize_int(t *testing.T) {
+	input := optioner.Some("s")
+	expected := []byte(`"s"`)
+	actual, err := json.Marshal(input)
 
-			Expect(err).To(BeNil())
-			Expect(actual.Get()).To(Equal(expected.Get()))
-			Expect(actual.Empty()).To(Equal(expected.Empty()))
-			Expect(actual.Defined()).To(Equal(expected.Defined()))
-		})
-	})
+	assert.Nil(t, err)
+	assert.Equal(t, expected, actual)
+}
 
-	Describe("Serialize/Deserialize int", func() {
-		It("should serialize an int", func() {
-			input := optioner.Some("s")
-			expected := []byte(`"s"`)
-			actual, err := json.Marshal(input)
+func Test_JSON_serialize_int_empty(t *testing.T) {
+	input := optioner.None[int]()
+	expected := []byte(`null`)
+	actual, err := json.Marshal(input)
 
-			Expect(err).To(BeNil())
-			Expect(actual).To(Equal(expected))
-		})
+	assert.Nil(t, err)
+	assert.Equal(t, expected, actual)
+}
 
-		It("should serialize an empty int", func() {
-			input := optioner.None[int]()
-			expected := []byte(`null`)
-			actual, err := json.Marshal(input)
+func Test_JSON_deserialize_int(t *testing.T) {
+	input := []byte(`null`)
+	expected := optioner.None[string]()
+	var actual optioner.Optioner[string]
+	err := json.Unmarshal(input, &actual)
 
-			Expect(err).To(BeNil())
-			Expect(actual).To(Equal(expected))
-		})
+	assert.Nil(t, err)
+	assert.Equal(t, expected.Get(), actual.Get())
+	assert.Equal(t, expected.Empty(), actual.Empty())
+	assert.Equal(t, expected.Defined(), actual.Defined())
+}
 
-		It("should deserialize an int", func() {
-			input := []byte(`1`)
-			expected := optioner.Some(1)
-			var actual optioner.Optioner[int]
+func Test_JSON_deserialize_int_empty(t *testing.T) {
+	input := []byte(`null`)
+	expected := optioner.None[string]()
+	var actual optioner.Optioner[string]
+	err := json.Unmarshal(input, &actual)
 
-			err := json.Unmarshal(input, &actual)
+	assert.Nil(t, err)
+	assert.Equal(t, expected.Get(), actual.Get())
+	assert.Equal(t, expected.Empty(), actual.Empty())
+	assert.Equal(t, expected.Defined(), actual.Defined())
+}
 
-			Expect(err).To(BeNil())
-			Expect(actual.Get()).To(Equal(expected.Get()))
-			Expect(actual.Empty()).To(Equal(expected.Empty()))
-			Expect(actual.Defined()).To(Equal(expected.Defined()))
-		})
+func Test_JSON_deserialize_nil_int(t *testing.T) {
+	input := []byte(`null`)
+	expected := optioner.None[int]()
+	var actual optioner.Optioner[int]
+	err := json.Unmarshal(input, &actual)
 
-		It("should deserialize a null int", func() {
-			input := []byte(`null`)
-			expected := optioner.None[int]()
-			var actual optioner.Optioner[int]
-
-			err := json.Unmarshal(input, &actual)
-
-			Expect(err).To(BeNil())
-			Expect(actual.Get()).To(Equal(expected.Get()))
-			Expect(actual.Empty()).To(Equal(expected.Empty()))
-			Expect(actual.Defined()).To(Equal(expected.Defined()))
-		})
-	})
-})
+	assert.Nil(t, err)
+	assert.Equal(t, expected.Get(), actual.Get())
+	assert.Equal(t, expected.Empty(), actual.Empty())
+	assert.Equal(t, expected.Defined(), actual.Defined())
+}
