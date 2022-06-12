@@ -1,7 +1,7 @@
 package optioner
 
 // MarshalYAML implements the gopkg.in/yaml.v2#Marshal interface
-func (t Optioner[T]) MarshalYAML() (interface{}, error) {
+func (t Option[T]) MarshalYAML() (interface{}, error) {
 	if t.Defined() {
 		return *t.v, nil
 	}
@@ -10,7 +10,7 @@ func (t Optioner[T]) MarshalYAML() (interface{}, error) {
 }
 
 // UnmarshalYAML implements the gopkg.in/yaml.v2#Unmarshal interface
-func (t *Optioner[T]) UnmarshalYAML(unmarshal func(interface{}) error) error {
+func (t *Option[T]) UnmarshalYAML(unmarshal func(interface{}) error) error {
 	var v T
 
 	if err := unmarshal(&v); err != nil {

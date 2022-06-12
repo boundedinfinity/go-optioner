@@ -28,7 +28,7 @@ func Test_YAML_serialize_empty_string(t *testing.T) {
 func Test_YAML_deserialize_string(t *testing.T) {
 	input := []byte("s\n")
 	expected := optioner.Some("s")
-	var actual optioner.Optioner[string]
+	var actual optioner.Option[string]
 
 	err := yaml.Unmarshal(input, &actual)
 
@@ -41,7 +41,7 @@ func Test_YAML_deserialize_string(t *testing.T) {
 func Test_YAML_deserialize_nil_string(t *testing.T) {
 	input := []byte("null\n")
 	expected := optioner.None[string]()
-	var actual optioner.Optioner[string]
+	var actual optioner.Option[string]
 
 	err := yaml.Unmarshal(input, &actual)
 
@@ -72,7 +72,7 @@ func Test_YAML_serialize_int_empty(t *testing.T) {
 func Test_YAML_deserialize_int(t *testing.T) {
 	input := []byte("1\n")
 	expected := optioner.Some(1)
-	var actual optioner.Optioner[int]
+	var actual optioner.Option[int]
 
 	err := yaml.Unmarshal(input, &actual)
 
@@ -85,7 +85,7 @@ func Test_YAML_deserialize_int(t *testing.T) {
 func Test_YAML_deserialize_int_empty(t *testing.T) {
 	input := []byte("null\n")
 	expected := optioner.None[int]()
-	var actual optioner.Optioner[int]
+	var actual optioner.Option[int]
 
 	err := yaml.Unmarshal(input, &actual)
 

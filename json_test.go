@@ -29,7 +29,7 @@ func Test_JSON_serialize_empty_string(t *testing.T) {
 func Test_JSON_deserialize_string(t *testing.T) {
 	input := []byte(`"s"`)
 	expected := optioner.Some("s")
-	var actual optioner.Optioner[string]
+	var actual optioner.Option[string]
 	err := json.Unmarshal(input, &actual)
 
 	assert.Nil(t, err)
@@ -41,7 +41,7 @@ func Test_JSON_deserialize_string(t *testing.T) {
 func Test_JSON_deserialize_nil_string(t *testing.T) {
 	input := []byte(`null`)
 	expected := optioner.None[string]()
-	var actual optioner.Optioner[string]
+	var actual optioner.Option[string]
 	err := json.Unmarshal(input, &actual)
 
 	assert.Nil(t, err)
@@ -71,7 +71,7 @@ func Test_JSON_serialize_int_empty(t *testing.T) {
 func Test_JSON_deserialize_int(t *testing.T) {
 	input := []byte(`null`)
 	expected := optioner.None[string]()
-	var actual optioner.Optioner[string]
+	var actual optioner.Option[string]
 	err := json.Unmarshal(input, &actual)
 
 	assert.Nil(t, err)
@@ -83,7 +83,7 @@ func Test_JSON_deserialize_int(t *testing.T) {
 func Test_JSON_deserialize_int_empty(t *testing.T) {
 	input := []byte(`null`)
 	expected := optioner.None[string]()
-	var actual optioner.Optioner[string]
+	var actual optioner.Option[string]
 	err := json.Unmarshal(input, &actual)
 
 	assert.Nil(t, err)
@@ -95,7 +95,7 @@ func Test_JSON_deserialize_int_empty(t *testing.T) {
 func Test_JSON_deserialize_nil_int(t *testing.T) {
 	input := []byte(`null`)
 	expected := optioner.None[int]()
-	var actual optioner.Optioner[int]
+	var actual optioner.Option[int]
 	err := json.Unmarshal(input, &actual)
 
 	assert.Nil(t, err)
