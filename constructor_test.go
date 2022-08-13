@@ -3,7 +3,7 @@ package optioner_test
 import (
 	"testing"
 
-	"github.com/boundedinfinity/optioner"
+	"github.com/boundedinfinity/go-optioner"
 	"github.com/stretchr/testify/assert"
 )
 

@@ -1,4 +1,4 @@
-module github.com/boundedinfinity/optioner
+module github.com/boundedinfinity/go-optioner
 
 go 1.18
 

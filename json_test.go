@@ -4,7 +4,7 @@ import (
 	"encoding/json"
 	"testing"
 
-	"github.com/boundedinfinity/optioner"
+	"github.com/boundedinfinity/go-optioner"
 	"github.com/stretchr/testify/assert"
 )
 
