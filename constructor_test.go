@@ -3,12 +3,12 @@ package optioner_test
 import (
 	"testing"
 
-	"github.com/boundedinfinity/go-optioner"
+	o "github.com/boundedinfinity/go-optioner"
 	"github.com/stretchr/testify/assert"
 )
 
 func Test_Some_with_string(t *testing.T) {
-	actual := optioner.Some("s")
+	actual := o.Some("s")
 
 	assert.Equal(t, actual.Empty(), false)
 	assert.Equal(t, actual.Defined(), true)
@@ -17,7 +17,7 @@ func Test_Some_with_string(t *testing.T) {
 }
 
 func Test_Some_with_int(t *testing.T) {
-	actual := optioner.Some(1)
+	actual := o.Some(1)
 
 	assert.Equal(t, actual.Empty(), false)
 	assert.Equal(t, actual.Defined(), true)
@@ -26,7 +26,7 @@ func Test_Some_with_int(t *testing.T) {
 }
 
 func Test_Some_with_boolean(t *testing.T) {
-	actual := optioner.Some(false)
+	actual := o.Some(false)
 
 	assert.Equal(t, actual.Empty(), false)
 	assert.Equal(t, actual.Defined(), true)
@@ -35,7 +35,7 @@ func Test_Some_with_boolean(t *testing.T) {
 }
 
 func Test_None_with_string(t *testing.T) {
-	actual := optioner.None[string]()
+	actual := o.None[string]()
 
 	assert.Equal(t, actual.Empty(), true)
 	assert.Equal(t, actual.Defined(), false)
@@ -44,7 +44,7 @@ func Test_None_with_string(t *testing.T) {
 }
 
 func Test_None_with_int(t *testing.T) {
-	actual := optioner.None[int]()
+	actual := o.None[int]()
 
 	assert.Equal(t, actual.Empty(), true)
 	assert.Equal(t, actual.Defined(), false)
@@ -53,7 +53,7 @@ func Test_None_with_int(t *testing.T) {
 }
 
 func Test_None_with_bool(t *testing.T) {
-	actual := optioner.None[bool]()
+	actual := o.None[bool]()
 
 	assert.Equal(t, actual.Empty(), true)
 	assert.Equal(t, actual.Defined(), false)
@@ -61,8 +61,8 @@ func Test_None_with_bool(t *testing.T) {
 	assert.Equal(t, actual.OrElse(true), true)
 }
 
-func Test_Option_with_nil_string(t *testing.T) {
-	actual := optioner.Of[string](nil)
+func Test_OfP_nil_string(t *testing.T) {
+	actual := o.OfP[string](nil)
 
 	assert.Equal(t, actual.Empty(), true)
 	assert.Equal(t, actual.Defined(), false)
@@ -70,9 +70,9 @@ func Test_Option_with_nil_string(t *testing.T) {
 	assert.Equal(t, actual.OrElse("x"), "x")
 }
 
-func Test_Option_with_string(t *testing.T) {
+func Test_OfP_with_string(t *testing.T) {
 	v := "s"
-	actual := optioner.Of(&v)
+	actual := o.OfP(&v)
 
 	assert.Equal(t, actual.Empty(), false)
 	assert.Equal(t, actual.Defined(), true)
@@ -80,8 +80,8 @@ func Test_Option_with_string(t *testing.T) {
 	assert.Equal(t, actual.OrElse("x"), "s")
 }
 
-func Test_Option_with_nil_int(t *testing.T) {
-	actual := optioner.Of[int](nil)
+func Test_OfP_with_nil_int(t *testing.T) {
+	actual := o.OfP[int](nil)
 
 	assert.Equal(t, actual.Empty(), true)
 	assert.Equal(t, actual.Defined(), false)
@@ -89,9 +89,9 @@ func Test_Option_with_nil_int(t *testing.T) {
 	assert.Equal(t, actual.OrElse(1), 1)
 }
 
-func Test_Option_with_int(t *testing.T) {
+func Test_OpP_with_int(t *testing.T) {
 	v := 1
-	actual := optioner.Of(&v)
+	actual := o.OfP(&v)
 
 	assert.Equal(t, actual.Empty(), false)
 	assert.Equal(t, actual.Defined(), true)

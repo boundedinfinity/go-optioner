@@ -40,23 +40,3 @@ func (t Option[T]) OrElse(v T) T {
 
 	return *t.v
 }
-
-func (t Option[T]) OrFirst(vs ...Option[T]) Option[T] {
-	for _, v := range vs {
-		if v.Defined() {
-			return v
-		}
-	}
-
-	return t
-}
-
-func (t Option[T]) OrLast(vs ...Option[T]) Option[T] {
-	for i := len(vs) - 1; i >= 0; i-- {
-		if vs[i].Defined() {
-			return vs[i]
-		}
-	}
-
-	return t
-}
